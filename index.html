@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteiro de Viagem: Portugal e Espanha 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chosen Palette: Warm Neutral (Slate, Stone, Amber) -->
+    <!-- Application Structure Plan: A tab-based Single Page Application (SPA) was chosen to organize complex trip information into clear, task-oriented sections (Visão Geral, Roteiro, Reservas, Mapa). This structure allows users to quickly access specific information (e.g., a booking number) without scrolling through a long document. The interactive design, with clickable day cards and map markers, promotes exploration and makes the data more digestible and engaging than a static text file. -->
+    <!-- Visualization & Content Choices: Itinerary -> Interactive Cards (for progressive disclosure of daily details); Key Locations -> Interactive Map (for spatial context without heavy APIs); Key Info -> Dashboard Widgets (for at-a-glance status); Bookings -> Utility-focused Cards with Copy-to-Clipboard buttons. This approach turns a flat report into a functional tool. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-color: #f5f5f4; /* stone-100 */
+            --card-bg-color: #ffffff; /* white */
+            --text-primary: #292524; /* stone-800 */
+            --text-secondary: #57534e; /* stone-600 */
+            --accent-color: #f59e0b; /* amber-500 */
+            --accent-hover: #d97706; /* amber-600 */
+            --border-color: #e7e5e4; /* stone-200 */
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-button.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .day-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            background-color: var(--card-bg-color);
+            transition: box-shadow 0.3s ease;
+        }
+        .day-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .day-card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            padding: 0 1.5rem;
+        }
+        .day-card.open .day-card-details {
+            max-height: 500px; /* Adjust as needed */
+            padding: 1rem 1.5rem 1.5rem;
+        }
+        .map-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            aspect-ratio: 1 / 1;
+            background-color: #d6d3d1; /* stone-300 */
+            border-radius: 1rem;
+            background-image: url('https://i.imgur.com/E5e7aD5.png'); /* Corrected map outline */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .map-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent-color);
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-marker:hover {
+            transform: scale(1.2);
+        }
+        .map-marker .fa-solid {
+            color: white;
+            font-size: 10px;
+        }
+        .info-popup {
+            display: none;
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--card-bg-color);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 200px;
+            z-index: 10;
+        }
+        .map-marker:hover .info-popup {
+            display: block;
+        }
+        .copy-button {
+            background-color: #e7e5e4;
+            color: #57534e;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-button:hover {
+            background-color: #d6d3d1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-stone-800">Viagem Portugal & Espanha 🇵🇹🇪🇸</h1>
+            <p class="text-stone-600 mt-2 text-lg">Agosto e Setembro 2025</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="flex justify-center border-b border-stone-200 mb-8">
+            <button data-tab="tab-overview" class="nav-button active px-4 py-3 text-lg font-semibold"><i class="fa-solid fa-chart-line mr-2"></i>Visão Geral</button>
+            <button data-tab="tab-itinerary" class="nav-button px-4 py-3 text-lg font-semibold"><i class="fa-solid fa-route mr-2"></i>Roteiro</button>
+            <button data-tab="tab-bookings" class="nav-button px-4 py-3 text-lg font-semibold"><i class="fa-solid fa-ticket mr-2"></i>Reservas</button>
+            <button data-tab="tab-map" class="nav-button px-4 py-3 text-lg font-semibold"><i class="fa-solid fa-map-location-dot mr-2"></i>Mapa</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Tab: Overview -->
+            <section id="tab-overview" class="content-section active">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 bg-white p-6 rounded-xl border border-stone-200">
+                        <h2 class="text-2xl font-bold mb-4">Próximos Passos</h2>
+                        <div id="next-event" class="text-stone-700">
+                            <!-- Next event will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-stone-200 text-center">
+                        <h2 class="text-2xl font-bold mb-2">Contagem Regressiva</h2>
+                        <div id="countdown" class="text-4xl font-bold text-amber-500">
+                            <!-- Countdown will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-xl border border-stone-200 mt-6">
+                    <h2 class="text-2xl font-bold mb-4">Linha do Tempo da Viagem</h2>
+                    <div class="flex items-center justify-between text-center text-sm md:text-base">
+                        <div class="flex-1">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-amber-500 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-plane-departure"></i></div>
+                            <p class="mt-2 font-semibold">Partida</p>
+                            <p class="text-stone-500">21/08</p>
+                        </div>
+                        <div class="flex-1 h-1 bg-stone-200"></div>
+                        <div class="flex-1">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-stone-700 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-sun"></i></div>
+                            <p class="mt-2 font-semibold">Algarve</p>
+                            <p class="text-stone-500">22-24/08</p>
+                        </div>
+                        <div class="flex-1 h-1 bg-stone-200"></div>
+                        <div class="flex-1">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-stone-700 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-martini-glass-citrus"></i></div>
+                            <p class="mt-2 font-semibold">Málaga</p>
+                            <p class="text-stone-500">24-29/08</p>
+                        </div>
+                        <div class="flex-1 h-1 bg-stone-200"></div>
+                        <div class="flex-1">
+                             <div class="w-10 h-10 mx-auto rounded-full bg-stone-700 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-tram"></i></div>
+                            <p class="mt-2 font-semibold">Lisboa</p>
+                            <p class="text-stone-500">29/08-02/09</p>
+                        </div>
+                         <div class="flex-1 h-1 bg-stone-200"></div>
+                        <div class="flex-1">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-amber-500 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-plane-arrival"></i></div>
+                            <p class="mt-2 font-semibold">Retorno</p>
+                            <p class="text-stone-500">02/09</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Itinerary -->
+            <section id="tab-itinerary" class="content-section">
+                <div id="itinerary-container" class="space-y-4">
+                    <!-- Itinerary cards will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Tab: Bookings -->
+            <section id="tab-bookings" class="content-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="bookings-container">
+                    <!-- Booking cards will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Tab: Map -->
+            <section id="tab-map" class="content-section">
+                 <h2 class="text-2xl font-bold mb-4 text-center">Mapa Interativo da Viagem</h2>
+                 <p class="text-center text-stone-600 mb-6">Passe o mouse ou clique nos marcadores para ver os detalhes de cada local.</p>
+                <div class="map-container" id="map">
+                    <!-- Map markers will be dynamically inserted here -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const tripData = {
+            travelers: {
+                car1: ["Eu", "Aline (Esposa)", "Guilherme (Filho, 2 anos)", "Daniel (Irmão)", "Carol (Cunhada)"],
+                car2: ["Ricardo Brum (Pai)", "Isabel (Madrasta)", "Desirrèe (Irmã)", "Fernanda (Irmã)"]
+            },
+            bookings: {
+                flights: {
+                    title: "Voos (TAP Air Portugal)",
+                    icon: "fa-plane-up",
+                    details: [
+                        { label: "Código da Reserva", value: "Z9UST7", copyable: true },
+                        { label: "Voo de Ida", value: "TP118 (POA-LIS) | 21/08, 21:55 - 12:45 (+1)" },
+                        { label: "Voo de Volta", value: "TP117 (LIS-POA) | 02/09, 14:20 - 21:45" }
+                    ]
+                },
+                accommodation: {
+                    title: "Hospedagem",
+                    icon: "fa-hotel",
+                    details: [
+                        { label: "Algarve (22-24/08)", value: "Hotel Rural Bricia Du Mar", link: "https://maps.app.goo.gl/WWBfjsRumSgC4Wfe8" },
+                        { label: "Málaga (24-29/08)", value: "Hotel Castilla Guerrero", link: "https://maps.app.goo.gl/UJja9D1azkLFkpQB7" },
+                        { label: "Lisboa (29/08-02/09)", value: "Pousada Palácio de Queluz", link: "https://maps.app.goo.gl/ciHvZLbTrTQTtcY58" }
+                    ]
+                },
+                carRental: {
+                    title: "Aluguel de Carro",
+                    icon: "fa-car",
+                    details: [
+                        { label: "Empresa", value: "Klass Wagen (via CarTrawler)" },
+                        { label: "Nº da Reserva", value: "PT216213090", copyable: true },
+                        { label: "Condutor Principal", value: "RICARDO MARANTES" },
+                        { label: "Retirada", value: "22/08/2025, 14:00 - Aeroporto de Lisboa" },
+                        { label: "Devolução", value: "02/09/2025, 14:00 - Aeroporto de Lisboa" },
+                        { label: "Nota", value: "Reserva de 1 carro confirmada. Verificar aluguel do 2º carro." }
+                    ]
+                },
+                activities: {
+                    title: "Passeios e Reservas",
+                    icon: "fa-ticket-simple",
+                    details: [
+                        { label: "Atividade", value: "Passeio Gruta de Benagil e Golfinhos" },
+                        { label: "Data", value: "23/08/2025, 17:30 (check-in às 17:00)" },
+                        { label: "Local", value: "Marina de Portimão", link: "https://goo.gl/maps/bY2aNq8e5gXGgG1fA" },
+                        { label: "Nº de Confirmação", value: "BK260114420518057", copyable: true }
+                    ]
+                }
+            },
+            itinerary: [
+                { date: "21/08", day: "Quinta", icon: "fa-plane-departure", title: "Início da Viagem", details: "18:55: Chegada ao Aeroporto Salgado Filho (POA).<br>21:55: Partida do voo TP118 para Lisboa." },
+                { date: "22/08", day: "Sexta", icon: "fa-car-side", title: "Chegada a Portugal e Viagem ao Algarve", details: "12:45: Chegada a Lisboa (LIS).<br>14:00: Retirada dos carros e início da viagem para o Algarve.<br>Noite: Check-in e pernoite no Hotel Rural Bricia Du Mar." },
+                { date: "23/08", day: "Sábado", icon: "fa-umbrella-beach", title: "Dia no Algarve", details: "Manhã: Sugestão de visita à Praia da Marinha.<br>17:30: Passeio de barco para ver a Gruta de Benagil e golfinhos." },
+                { date: "24/08", day: "Domingo", icon: "fa-map-signs", title: "Viagem para a Espanha", details: "Manhã: Viagem de Ferragudo para Málaga (aprox. 4h).<br>Tarde: Check-in no Hotel Castilla Guerrero." },
+                { date: "25/08", day: "Segunda", icon: "fa-city", title: "Explorando Málaga", details: "Sugestão: Visitar a Alcazaba e o Castelo de Gibralfaro pela manhã. Passear pelo Muelle Uno à tarde." },
+                { date: "26/08", day: "Terça", icon: "fa-mountain-sun", title: "Bate e Volta a Ronda", details: "Sugestão: Passeio de dia inteiro para conhecer a impressionante 'cidade dividida' e sua Puente Nuevo." },
+                { date: "27/08", day: "Quarta", icon: "fa-paint-roller", title: "Aldeias Brancas", details: "Sugestão: Bate e volta para Nerja (Balcón de Europa) e a aldeia branca de Frigiliana. Possível encontro com amigo." },
+                { date: "28/08", day: "Quinta", icon: "fa-martini-glass", title: "Dia Livre em Málaga", details: "Dia livre para explorar a cidade, fazer compras ou relaxar. Possível encontro com amigo." },
+                { date: "29/08", day: "Sexta", icon: "fa-road", title: "Retorno a Portugal", details: "Manhã/Tarde: Viagem longa de Málaga para Lisboa (aprox. 6h 30min).<br>Noite: Check-in na Pousada Palácio de Queluz." },
+                { date: "30/08", day: "Sábado", icon: "fa-fish-fins", title: "Opção de Passeio em Lisboa 1", details: "Sugestão: Dia Aquático e Moderno. Visitar o Oceanário de Lisboa e passear pelo Parque das Nações." },
+                { date: "31/08", day: "Domingo", icon: "fa-monument", title: "Opção de Passeio em Lisboa 2", details: "Sugestão: Dia de Clássicos. Explorar a região de Belém (Mosteiro dos Jerônimos, Torre de Belém) e o centro histórico." },
+                { date: "01/09", day: "Segunda", icon: "fa-cross", title: "Opção de Passeio em Lisboa 3/4", details: "Sugestão 1: Viagem para Fátima e a vila medieval de Óbidos.<br>Sugestão 2: Viagem para Tomar para visitar o Convento de Cristo." },
+                { date: "02/09", day: "Terça", icon: "fa-plane-arrival", title: "Fim da Viagem", details: "Manhã livre.<br>14:00: Devolução dos carros no aeroporto.<br>14:20: Partida do voo TP117 para Porto Alegre.<br>21:45: Chegada prevista em Porto Alegre (POA)." }
+            ],
+            mapMarkers: [
+                { id: "lisbon", name: "Lisboa", icon: "fa-tram", top: "38%", left: "15%", details: "Ponto de chegada, partida e base para os passeios finais." },
+                { id: "algarve", name: "Algarve", icon: "fa-sun", top: "58%", left: "20%", details: "Hospedagem em Ferragudo. Passeio de barco em Portimão." },
+                { id: "malaga", name: "Málaga", icon: "fa-martini-glass-citrus", top: "60%", left: "60%", details: "Base na Andaluzia. Visitas à Alcazaba, Muelle Uno." },
+                { id: "ronda", name: "Ronda", icon: "fa-mountain-sun", top: "65%", left: "48%", details: "Sugestão de bate e volta a partir de Málaga." },
+                { id: "tomar", name: "Tomar", icon: "fa-cross", top: "28%", left: "18%", details: "Sugestão de bate e volta a partir de Lisboa (Convento de Cristo)." }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupNavigation();
+            renderItinerary();
+            renderBookings();
+            renderMap();
+            startCountdown();
+            updateOverview();
+        });
+
+        function setupNavigation() {
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+
+                    // Activate clicked
+                    button.classList.add('active');
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        function renderItinerary() {
+            const container = document.getElementById('itinerary-container');
+            let html = '';
+            tripData.itinerary.forEach(item => {
+                html += `
+                    <div class="day-card" onclick="this.classList.toggle('open')">
+                        <div class="p-6 flex items-center cursor-pointer">
+                            <div class="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center mr-4">
+                                <i class="fa-solid ${item.icon} text-xl text-stone-600"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <p class="text-sm text-stone-500">${item.date} - ${item.day}</p>
+                                <h3 class="text-xl font-bold">${item.title}</h3>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-stone-400 transition-transform"></i>
+                        </div>
+                        <div class="day-card-details">
+                            <p class="text-stone-700">${item.details}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        function renderBookings() {
+            const container = document.getElementById('bookings-container');
+            let html = '';
+            for (const key in tripData.bookings) {
+                const booking = tripData.bookings[key];
+                html += `
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-bold mb-4 flex items-center"><i class="fa-solid ${booking.icon} text-amber-500 mr-3"></i>${booking.title}</h3>
+                        <div class="space-y-3">`;
+                booking.details.forEach(detail => {
+                    html += `<div class="flex justify-between items-start">
+                                <span class="font-semibold text-stone-800">${detail.label}:</span>
+                                <div class="text-right text-stone-600 pl-2">`;
+                    if (detail.link) {
+                        html += `<a href="${detail.link}" target="_blank" class="text-amber-600 hover:underline">${detail.value} <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>`;
+                    } else {
+                        html += detail.value;
+                    }
+                    if (detail.copyable) {
+                        html += ` <button class="copy-button ml-2" onclick="copyToClipboard('${detail.value}', this)"><i class="fa-solid fa-copy"></i></button>`;
+                    }
+                    html += `</div></div>`;
+                });
+                html += `</div></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderMap() {
+            const container = document.getElementById('map');
+            let html = '';
+            tripData.mapMarkers.forEach(marker => {
+                html += `
+                    <div id="${marker.id}" class="map-marker" style="top: ${marker.top}; left: ${marker.left};">
+                        <i class="fa-solid ${marker.icon}"></i>
+                        <div class="info-popup">
+                            <h4 class="font-bold text-sm">${marker.name}</h4>
+                            <p class="text-xs text-stone-500">${marker.details}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function startCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            const tripStartDate = new Date('2025-08-21T21:55:00-03:00');
+
+            const update = () => {
+                const now = new Date();
+                const diff = tripStartDate - now;
+
+                if (diff <= 0) {
+                    countdownEl.innerHTML = "Boa Viagem!";
+                    clearInterval(interval);
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+                countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m`;
+            };
+            
+            const interval = setInterval(update, 1000 * 60); // Update every minute
+            update();
+        }
+
+        function updateOverview() {
+            const nextEventEl = document.getElementById('next-event');
+            const now = new Date();
+            let nextEvent = null;
+
+            const eventDates = [
+                { date: new Date('2025-08-21T18:55:00-03:00'), text: "Ir para o Aeroporto Salgado Filho." },
+                { date: new Date('2025-08-23T17:00:00+01:00'), text: "Check-in para o passeio de barco em Portimão." },
+                { date: new Date('2025-08-24T09:00:00+01:00'), text: "Viagem do Algarve para Málaga." },
+                { date: new Date('2025-08-29T09:00:00+02:00'), text: "Viagem de Málaga para Lisboa." },
+                { date: new Date('2025-09-02T14:00:00+01:00'), text: "Devolução dos carros no Aeroporto de Lisboa." },
+            ];
+
+            for (const event of eventDates) {
+                if (event.date > now) {
+                    nextEvent = event;
+                    break;
+                }
+            }
+
+            if (nextEvent) {
+                nextEventEl.innerHTML = `<p class="text-lg"><span class="font-bold">Data:</span> ${nextEvent.date.toLocaleDateString('pt-BR', {weekday: 'long', day: '2-digit', month: 'long'})}</p><p class="text-lg mt-2"><span class="font-bold">Evento:</span> ${nextEvent.text}</p>`;
+            } else {
+                 nextEventEl.innerHTML = `<p class="text-lg">A viagem já terminou. Espero que tenham gostado!</p>`;
+            }
+        }
+
+        function copyToClipboard(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const originalIcon = button.innerHTML;
+            button.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(() => {
+                button.innerHTML = originalIcon;
+            }, 1500);
+        }
+
+    </script>
+</body>
+</html>
+
