@@ -238,9 +238,9 @@
                     title: "Hospedagem",
                     icon: "fa-hotel",
                     details: [
-                        { label: "Algarve (22-24/08)", value: "Hotel Rural Bricia Du Mar", link: "https://maps.app.goo.gl/WWBfjsRumSgC4Wfe8" },
-                        { label: "Málaga (24-29/08)", value: "Hotel Castilla Guerrero", link: "https://maps.app.goo.gl/UJja9D1azkLFkpQB7" },
-                        { label: "Lisboa (29/08-02/09)", value: "Pousada Palácio de Queluz", link: "https://maps.app.goo.gl/ciHvZLbTrTQTtcY58" }
+                        { label: "Algarve (22-24/08)", value: "Hotel Rural Bricia Du Mar", link: "https://www.google.com/maps/search/?api=1&query=Vale+da+Areia%2C+8400-275+Ferragudo%2C+Portugal" },
+                        { label: "Málaga (24-29/08)", value: "Hotel Castilla Guerrero", link: "https://www.google.com/maps/search/?api=1&query=C.+Compositor+Lehmberg%2C+10%2C+Distrito+Centro%2C+29007+Málaga%2C+Espanha" },
+                        { label: "Lisboa (29/08-02/09)", value: "Pousada Palácio de Queluz", link: "https://www.google.com/maps/search/?api=1&query=Largo+do+Palácio+Nacional%2C+2745-191+Queluz%2C+Portugal" }
                     ]
                 },
                 carRental: {
@@ -252,7 +252,7 @@
                         { label: "Condutor Principal", value: "RICARDO MARANTES" },
                         { label: "Retirada", value: "22/08/2025, 14:00 - Aeroporto de Lisboa" },
                         { label: "Devolução", value: "02/09/2025, 14:00 - Aeroporto de Lisboa" },
-                        { label: "Nota", value: "Reserva de 1 carro confirmada. Verificar aluguel do 2º carro." }
+                        { label: "Nota", value: "Reserva de 1 carro (Seat Leon Estate ou similar) confirmada. Verificar 2º carro." }
                     ]
                 },
                 activities: {
@@ -261,30 +261,37 @@
                     details: [
                         { label: "Atividade", value: "Passeio Gruta de Benagil e Golfinhos" },
                         { label: "Data", value: "23/08/2025, 17:30 (check-in às 17:00)" },
-                        { label: "Local", value: "Marina de Portimão", link: "https://goo.gl/maps/bY2aNq8e5gXGgG1fA" },
-                        { label: "Nº de Confirmação", value: "BK260114420518057", copyable: true }
+                        { label: "Local", value: "Marina de Portimão", link: "https://www.google.com/maps/search/?api=1&query=Marina+de+Portimão%2C+8500-311+Portimão" },
+                        { label: "Nº de Confirmação", value: "BK260114420518057", copyable: true },
+                        { label: "PIN", value: "1233", copyable: true },
+                        { type: "divider" },
+                        { label: "Atividade", value: "Visita à Cueva de Nerja" },
+                        { label: "Data", value: "26/08/2025, 09:40" },
+                        { label: "Local", value: "Cueva de Nerja, Espanha", link: "https://www.google.com/maps/search/?api=1&query=Ctra.+de+Maro%2C+s%2Fn+-+29787+Nerja%2C+Málaga%2C+Espanha" },
+                        { label: "Nº da Reserva", value: "85338797", copyable: true }
                     ]
                 }
             },
             itinerary: [
-                { date: "21/08", day: "Quinta", icon: "fa-plane-departure", title: "Início da Viagem", details: "18:55: Chegada ao Aeroporto Salgado Filho (POA).<br>21:55: Partida do voo TP118 para Lisboa." },
-                { date: "22/08", day: "Sexta", icon: "fa-car-side", title: "Chegada a Portugal e Viagem ao Algarve", details: "12:45: Chegada a Lisboa (LIS).<br>14:00: Retirada dos carros e início da viagem para o Algarve.<br>Noite: Check-in e pernoite no Hotel Rural Bricia Du Mar." },
-                { date: "23/08", day: "Sábado", icon: "fa-umbrella-beach", title: "Dia no Algarve", details: "Manhã: Sugestão de visita à Praia da Marinha.<br>17:30: Passeio de barco para ver a Gruta de Benagil e golfinhos." },
+                { date: "21/08", day: "Quinta", icon: "fa-plane-departure", title: "Início da Viagem", details: "19:55: Chegada ao Aeroporto Salgado Filho (POA).<br>21:55: Partida do voo TP118 para Lisboa." },
+                { date: "22/08", day: "Sexta", icon: "fa-car-side", title: "Chegada a Portugal e Viagem ao Algarve", details: "12:45: Chegada a Lisboa (LIS).<br>14:00: Retirada do carro e início da viagem para o Algarve.<br>Noite: Check-in e pernoite no Hotel Rural Bricia Du Mar." },
+                { date: "23/08", day: "Sábado", icon: "fa-umbrella-beach", title: "Dia no Algarve", details: "Manhã: Sugestão de visita à Praia da Marinha.<br>17:30: Passeio de barco para ver a Gruta de Benagil e golfinhos (check-in às 17:00)." },
                 { date: "24/08", day: "Domingo", icon: "fa-map-signs", title: "Viagem para a Espanha", details: "Manhã: Viagem de Ferragudo para Málaga (aprox. 4h).<br>Tarde: Check-in no Hotel Castilla Guerrero." },
-                { date: "25/08", day: "Segunda", icon: "fa-city", title: "Explorando Málaga", details: "Sugestão: Visitar a Alcazaba e o Castelo de Gibralfaro pela manhã. Passear pelo Muelle Uno à tarde." },
-                { date: "26/08", day: "Terça", icon: "fa-mountain-sun", title: "Bate e Volta a Ronda", details: "Sugestão: Passeio de dia inteiro para conhecer a impressionante 'cidade dividida' e sua Puente Nuevo." },
-                { date: "27/08", day: "Quarta", icon: "fa-paint-roller", title: "Aldeias Brancas", details: "Sugestão: Bate e volta para Nerja (Balcón de Europa) e a aldeia branca de Frigiliana. Possível encontro com amigo." },
+                { date: "25/08", day: "Segunda", icon: "fa-city", title: "Explorando Málaga", details: "Sugestão: Visitar a Alcazaba e o Castelo de Gibralfaro. Passear pelo Muelle Uno à tarde." },
+                { date: "26/08", day: "Terça", icon: "fa-water", title: "Nerja, Frigiliana e Grutas", details: "09:40: Visita à Cueva de Nerja.<br>Resto do dia: Passeio por Nerja (Balcón de Europa) e pela aldeia branca de Frigiliana." },
+                { date: "27/08", day: "Quarta", icon: "fa-mountain-sun", title: "Bate e Volta a Ronda", details: "Sugestão: Passeio de dia inteiro para conhecer a impressionante 'cidade dividida' e sua Puente Nuevo. Possível encontro com amigo." },
                 { date: "28/08", day: "Quinta", icon: "fa-martini-glass", title: "Dia Livre em Málaga", details: "Dia livre para explorar a cidade, fazer compras ou relaxar. Possível encontro com amigo." },
                 { date: "29/08", day: "Sexta", icon: "fa-road", title: "Retorno a Portugal", details: "Manhã/Tarde: Viagem longa de Málaga para Lisboa (aprox. 6h 30min).<br>Noite: Check-in na Pousada Palácio de Queluz." },
-                { date: "30/08", day: "Sábado", icon: "fa-fish-fins", title: "Opção de Passeio em Lisboa 1", details: "Sugestão: Dia Aquático e Moderno. Visitar o Oceanário de Lisboa e passear pelo Parque das Nações." },
-                { date: "31/08", day: "Domingo", icon: "fa-monument", title: "Opção de Passeio em Lisboa 2", details: "Sugestão: Dia de Clássicos. Explorar a região de Belém (Mosteiro dos Jerônimos, Torre de Belém) e o centro histórico." },
-                { date: "01/09", day: "Segunda", icon: "fa-cross", title: "Opção de Passeio em Lisboa 3/4", details: "Sugestão 1: Viagem para Fátima e a vila medieval de Óbidos.<br>Sugestão 2: Viagem para Tomar para visitar o Convento de Cristo." },
-                { date: "02/09", day: "Terça", icon: "fa-plane-arrival", title: "Fim da Viagem", details: "Manhã livre.<br>14:00: Devolução dos carros no aeroporto.<br>14:20: Partida do voo TP117 para Porto Alegre.<br>21:45: Chegada prevista em Porto Alegre (POA)." }
+                { date: "30/08", day: "Sábado", icon: "fa-fish-fins", title: "Opção: Dia Aquático em Lisboa", details: "Sugestão: Visitar o Oceanário de Lisboa e passear pelo Parque das Nações (ótimo para o Guilherme)." },
+                { date: "31/08", day: "Domingo", icon: "fa-monument", title: "Opção: Clássicos de Lisboa", details: "Sugestão: Explorar a região de Belém (Mosteiro dos Jerônimos, Torre de Belém) e o centro histórico." },
+                { date: "01/09", day: "Segunda", icon: "fa-cross", title: "Opção: Bate e Volta de Lisboa", details: "Sugestão 1: Viagem para Fátima e a vila medieval de Óbidos.<br>Sugestão 2: Viagem para Tomar para visitar o Convento de Cristo." },
+                { date: "02/09", day: "Terça", icon: "fa-plane-arrival", title: "Fim da Viagem", details: "Manhã livre.<br>14:00: Devolução do carro no aeroporto.<br>14:20: Partida do voo TP117 para Porto Alegre.<br>21:45: Chegada prevista em Porto Alegre (POA)." }
             ],
             mapMarkers: [
                 { id: "lisbon", name: "Lisboa", icon: "fa-tram", top: "38%", left: "15%", details: "Ponto de chegada, partida e base para os passeios finais." },
                 { id: "algarve", name: "Algarve", icon: "fa-sun", top: "58%", left: "20%", details: "Hospedagem em Ferragudo. Passeio de barco em Portimão." },
                 { id: "malaga", name: "Málaga", icon: "fa-martini-glass-citrus", top: "60%", left: "60%", details: "Base na Andaluzia. Visitas à Alcazaba, Muelle Uno." },
+                { id: "nerja", name: "Nerja", icon: "fa-water", top: "66%", left: "65%", details: "Visita à Cueva de Nerja e ao Balcón de Europa." },
                 { id: "ronda", name: "Ronda", icon: "fa-mountain-sun", top: "65%", left: "48%", details: "Sugestão de bate e volta a partir de Málaga." },
                 { id: "tomar", name: "Tomar", icon: "fa-cross", top: "28%", left: "18%", details: "Sugestão de bate e volta a partir de Lisboa (Convento de Cristo)." }
             ]
@@ -350,6 +357,10 @@
                         <h3 class="text-2xl font-bold mb-4 flex items-center"><i class="fa-solid ${booking.icon} text-amber-500 mr-3"></i>${booking.title}</h3>
                         <div class="space-y-3">`;
                 booking.details.forEach(detail => {
+                    if (detail.type === 'divider') {
+                        html += `<hr class="my-3 border-stone-200">`;
+                        return;
+                    }
                     html += `<div class="flex justify-between items-start">
                                 <span class="font-semibold text-stone-800">${detail.label}:</span>
                                 <div class="text-right text-stone-600 pl-2">`;
@@ -416,12 +427,16 @@
             let nextEvent = null;
 
             const eventDates = [
-                { date: new Date('2025-08-21T18:55:00-03:00'), text: "Ir para o Aeroporto Salgado Filho." },
+                { date: new Date('2025-08-21T19:55:00-03:00'), text: "Ir para o Aeroporto Salgado Filho." },
                 { date: new Date('2025-08-23T17:00:00+01:00'), text: "Check-in para o passeio de barco em Portimão." },
                 { date: new Date('2025-08-24T09:00:00+01:00'), text: "Viagem do Algarve para Málaga." },
+                { date: new Date('2025-08-26T09:40:00+02:00'), text: "Visita à Cueva de Nerja." },
                 { date: new Date('2025-08-29T09:00:00+02:00'), text: "Viagem de Málaga para Lisboa." },
-                { date: new Date('2025-09-02T14:00:00+01:00'), text: "Devolução dos carros no Aeroporto de Lisboa." },
+                { date: new Date('2025-09-02T14:00:00+01:00'), text: "Devolução do carro no Aeroporto de Lisboa." },
             ];
+
+            // Sort events just in case they are not in order
+            eventDates.sort((a, b) => a.date - b.date);
 
             for (const event of eventDates) {
                 if (event.date > now) {
@@ -455,4 +470,3 @@
     </script>
 </body>
 </html>
-
